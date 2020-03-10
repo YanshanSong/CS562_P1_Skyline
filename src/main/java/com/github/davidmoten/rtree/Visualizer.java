@@ -53,10 +53,12 @@ public final class Visualizer {
         g.clearRect(0, 0, width, height);
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.75f));
 
-        if (tree.root().isPresent()) {
-            final List<RectangleDepth> nodeDepths = getNodeDepthsSortedByDepth(tree.root().get());
-            drawNode(g, nodeDepths);
-        }
+//        if (tree.root().isPresent()) {
+//            final List<RectangleDepth> nodeDepths = getNodeDepthsSortedByDepth(tree.root().get());
+//            drawNode(g, nodeDepths);
+//        }
+        drawSkyLinePoints(g, tree.getSkyLinePoints());
+        drawSkyLine(g, tree.getSkyLinePoints());
         return image;
     }
 
@@ -64,7 +66,6 @@ public final class Visualizer {
             Node<T, S> root) {
         final List<RectangleDepth> list = getRectangleDepths(root, 0);
         Collections.sort(list, new Comparator<RectangleDepth>() {
-
             @Override
             public int compare(RectangleDepth n1, RectangleDepth n2) {
                 return ((Integer) n1.getDepth()).compareTo(n2.getDepth());
@@ -107,6 +108,53 @@ public final class Visualizer {
         final double x2 = (r.x2() - view.x1()) / (view.x2() - view.x1()) * width;
         final double y2 = (r.y2() - view.y1()) / (view.y2() - view.y1()) * height;
         g.drawRect(rnd(x1), rnd(y1), Math.max(rnd(x2 - x1), 1), Math.max(rnd(y2 - y1), 1));
+    }
+
+    private void drawSkyLinePoints(Graphics2D g, List<? extends Entry<?, Geometry>> skyLinePoints) {
+        g.setColor(Color.BLACK);
+        g.setStroke(new BasicStroke(3f));
+        for(Entry<?, Geometry> skylinePoint: skyLinePoints) {
+            final double x = (skylinePoint.geometry().mbr().x1() - view.x1()) / (view.x2() - view.x1()) * width;
+            final double y = (skylinePoint.geometry().mbr().y1() - view.y1()) / (view.y2() - view.y1()) * height;
+            g.drawRect(rnd(x), rnd(y), 3, 3);
+        }
+    }
+
+    private void drawSkyLine(Graphics2D g, List<? extends Entry<?, Geometry>> skyLinePoints) {
+        if(skyLinePoints.size() > 0) {
+            int size = skyLinePoints.size();
+            g.setStroke(new BasicStroke(2f));
+            // Draw the first line(vertical line).
+            Entry<?, Geometry> skylinePoint_1 = skyLinePoints.get(0);
+            double x1 = (skylinePoint_1.geometry().mbr().x1() - view.x1()) / (view.x2() - view.x1()) * width;
+            double y1 = height;
+            double x2 = x1;
+            double y2 = (skylinePoint_1.geometry().mbr().y1() - view.y1()) / (view.y2() - view.y1()) * height;
+            g.drawLine(rnd(x1), rnd(y1), rnd(x2), rnd(y2));
+
+            for(int i = 0; i < skyLinePoints.size()-1; i++) {
+                Entry<?, Geometry> currentPoint = skyLinePoints.get(i);
+                Entry<?, Geometry> nextPoint = skyLinePoints.get(i+1);
+                // Draw the horizontal line between the current node and the next node.
+                x1 = (currentPoint.geometry().mbr().x1() - view.x1()) / (view.x2() - view.x1()) * width;
+                y1 = (currentPoint.geometry().mbr().y1() - view.y1()) / (view.y2() - view.y1()) * height;
+                x2 = (nextPoint.geometry().mbr().x1() - view.x1()) / (view.x2() - view.x1()) * width;
+                y2 = y1;
+                g.drawLine(rnd(x1), rnd(y1), rnd(x2), rnd(y2));
+                // Draw the vertical line between the current node and the next node.
+                x1 = x2;
+                y2 = (nextPoint.geometry().mbr().y1() - view.y1()) / (view.y2() - view.y1()) * height;
+                g.drawLine(rnd(x1), rnd(y1), rnd(x2), rnd(y2));
+            }
+
+            // Draw the last line (horizontal line).
+            Entry<?, Geometry> skylinePoint_n = skyLinePoints.get(size-1);
+            x1 = (skylinePoint_n.geometry().mbr().x1() - view.x1()) / (view.x2() - view.x1()) * width;
+            y1 = (skylinePoint_n.geometry().mbr().y1() - view.y1()) / (view.y2() - view.y1()) * height;
+            x2 = width;
+            y2 = y1;
+            g.drawLine(rnd(x1), rnd(y1), rnd(x2), rnd(y2));
+        }
     }
 
     private static int rnd(double d) {

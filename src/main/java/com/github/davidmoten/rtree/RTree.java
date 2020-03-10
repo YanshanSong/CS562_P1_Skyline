@@ -39,6 +39,16 @@ public final class RTree<T, S extends Geometry> {
 
     private final Optional<? extends Node<T, S>> root;
     private final Context<T, S> context;
+    private List<Entry<T, S>> skyLinePoints;
+
+
+    public List<Entry<T, S>> getSkyLinePoints() {
+        return skyLinePoints;
+    }
+
+    public void setSkyLinePoints(List<Entry<T, S>> skyLinePoints) {
+        this.skyLinePoints = skyLinePoints;
+    }
 
     /**
      * Benchmarks show that this is a good choice for up to O(10,000) entries when

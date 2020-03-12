@@ -4,11 +4,11 @@ package com.github.davidmoten.skyline;
 import com.github.davidmoten.rtree.Entries;
 import com.github.davidmoten.rtree.Entry;
 import com.github.davidmoten.rtree.geometry.Geometries;
-import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.Point;
-import com.github.davidmoten.rtree.geometry.Rectangle;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 

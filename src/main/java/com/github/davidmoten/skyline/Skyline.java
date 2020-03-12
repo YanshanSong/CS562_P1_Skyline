@@ -3,20 +3,19 @@ package com.github.davidmoten.skyline;
 import com.github.davidmoten.rtree.*;
 import com.github.davidmoten.rtree.geometry.Point;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.PriorityQueue;
 
 
-public class SkyLine {
+public class Skyline {
     private RTree<Object, Point> rTree;
     private PriorityQueue<MyNode> pq;
     private List<Entry<Object, Point>> skyLinePoints;
 
 
-    public SkyLine(RTree<Object, Point> rTree) {
+    public Skyline(RTree<Object, Point> rTree) {
         this.rTree = rTree;
         pq = new PriorityQueue<>(new Comparator<MyNode>() {
             @Override
@@ -82,7 +81,6 @@ public class SkyLine {
         }
         // Sort by x;
         skyLinePoints.sort((o1, o2) -> (int) Math.floor (o1.geometry().x() - o2.geometry().x()));
-        rTree.setSkyLinePoints(skyLinePoints);
     }
 
 

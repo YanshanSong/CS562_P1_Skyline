@@ -200,7 +200,7 @@ The key is that you need to supply the ```intersects``` function (```pointInPoly
 
 Search with a custom geometry and maxDistance
 --------------------------------------------------
-As per the example above to do a proximity search you need to specify how to calculate distance between the geometry you are searching and the entry geometries:
+# As per the example above to do a proximity search you need to specify how to calculate distance between the geometry you are searching and the entry geometries:
 
 ```java
 RTree<String, Point> tree = RTree.create();
